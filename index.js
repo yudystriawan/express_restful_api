@@ -1,6 +1,9 @@
 const express = require("express");
 const menus = require("./routes/menus");
+const categories = require("./routes/categories");
 const mongoose = require("mongoose");
+const Joi = require("joi");
+Joi.objectId = require("joi-objectid")(Joi);
 
 const app = express();
 
@@ -13,9 +16,11 @@ mongoose
   })
   .then(() => console.log("Connected to db..."))
   .catch((err) => console.error("Could not connect to db...", err));
+
 //Middleware
 app.use(express.json());
 app.use("/api/menus", menus);
+app.use("/api/categories", categories);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port: ${port}...`));

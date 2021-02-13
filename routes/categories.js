@@ -1,12 +1,13 @@
+const { required } = require("joi");
+
 const express = require("express");
 const router = express.Router();
-const { Menu, validate } = require("../models/menu");
-const { Category } = require("../models/category");
+const { Category, validate } = require("../models/category");
 
 router.get("/", async (req, res) => {
   try {
-    const menus = await Menu.find().populate("category");
-    return res.json(menus);
+    const categories = await Category.find();
+    return res.json(categories);
   } catch (error) {
     return res.status(400).json({
       message: error.message,
@@ -16,8 +17,8 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    const menu = await Menu.findById(req.params.id);
-    res.json(menu);
+    const category = await Category.findById(req.params.id);
+    res.json(category);
   } catch (error) {
     return res.status(400).json({
       message: error.message,
@@ -33,15 +34,13 @@ router.post("/", async (req, res) => {
       message: error.details[0].message,
     });
   } else {
-    const menu = new Menu({
+    const category = new Category({
       name: req.body.name,
       description: req.body.description,
-      category: req.body.categoryId,
-      price: req.body.price,
     });
 
     try {
-      const result = await menu.save();
+      const result = await category.save();
       res.json(result);
     } catch (error) {
       return res.status(400).json({
@@ -56,16 +55,15 @@ router.put("/:id", async (req, res) => {
 
   if (req.body.name) attributes.name = req.body.name;
   if (req.body.description) attributes.description = req.body.description;
-  if (req.body.price) attributes.price = req.body.price;
 
   try {
-    const menu = await Menu.findByIdAndUpdate(
+    const category = await Category.findByIdAndUpdate(
       req.params.id,
       { $set: attributes },
       { new: true }
     );
 
-    res.json(menu);
+    res.json(category);
   } catch (error) {
     return res.status(400).json({
       message: error.message,
@@ -75,8 +73,8 @@ router.put("/:id", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   try {
-    const menu = await Menu.remove({ _id: req.params.id });
-    res.json(menu);
+    const category = await Category.remove({ _id: req.params.id });
+    res.json(category);
   } catch (error) {
     res.status(400).json({
       message: error,

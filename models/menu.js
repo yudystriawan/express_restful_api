@@ -13,8 +13,8 @@ const Menu = mongoose.model(
       required: true,
     },
     category: {
-      type: String,
-      required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
     },
     price: {
       type: Number,
@@ -27,7 +27,7 @@ function validateMenu(menu) {
   const schema = Joi.object({
     name: Joi.string().required(),
     description: Joi.string().required(),
-    category: Joi.string().required(),
+    categoryId: Joi.objectId().required(),
     price: Joi.number().required(),
   });
 
