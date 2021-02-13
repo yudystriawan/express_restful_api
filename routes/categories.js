@@ -1,5 +1,3 @@
-const { required } = require("joi");
-
 const express = require("express");
 const router = express.Router();
 const { Category, validate } = require("../models/category");
@@ -30,7 +28,7 @@ router.post("/", async (req, res) => {
   const { error } = validate(req.body);
   if (error) {
     res.status(400).json({
-      code: 404,
+      code: 400,
       message: error.details[0].message,
     });
   } else {
