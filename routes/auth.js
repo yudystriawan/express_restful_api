@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const { User } = require("../models/user");
 const { compare } = require("../services/password-hasher");
+const { generateToken } = require("../services/jwt");
 const Joi = require("joi");
 const passwordComplexity = require("joi-password-complexity");
 
@@ -21,7 +22,9 @@ router.post("/", async (req, res) => {
     const passwordMatched = await compare(req.body.password, user.password);
     if (!passwordMatched) return res.status(400).json({ message: invalidAuth });
 
-    return res.json({ success: true });
+    const token = generateToken(user);
+
+    return res.json({ success: true, token: token });
   }
 });
 
