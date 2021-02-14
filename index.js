@@ -6,8 +6,13 @@ const auth = require("./routes/auth");
 const mongoose = require("mongoose");
 const Joi = require("joi");
 Joi.objectId = require("joi-objectid")(Joi);
-
+const config = require("config");
 const app = express();
+
+if (!config.get("jwtSecretKey")) {
+  console.log("FATAL ERROR: jwtSecretKey is no defined");
+  process.exit(1);
+}
 
 mongoose
   .connect("mongodb://127.0.0.1/market", {
@@ -23,8 +28,8 @@ mongoose
 app.use(express.json());
 app.use("/api/menus", menus);
 app.use("/api/categories", categories);
-app.use("/api/users", users); 
-app.use("/api/auth", auth); 
+app.use("/api/users", users);
+app.use("/api/auth", auth);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port: ${port}...`));
