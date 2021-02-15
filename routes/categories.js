@@ -5,7 +5,6 @@ const { Category, validate } = require("../models/category");
 const { User } = require("../models/user");
 const authorization = require("../middlewares/authorization");
 const { userRoles } = require("../models/user");
-const asyncMiddleware = require("../middlewares/async");
 
 router.get("/", async (req, res) => {
   const categories = await Category.find().populate(

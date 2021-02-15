@@ -1,5 +1,6 @@
-require('express-async-errors');
-const errorHandling = require('./middlewares/errorHandling');
+const winston = require("./services/winston");
+require("express-async-errors");
+const errorHandling = require("./middlewares/errorHandling");
 const express = require("express");
 const menus = require("./routes/menus");
 const categories = require("./routes/categories");
@@ -9,7 +10,20 @@ const mongoose = require("mongoose");
 const Joi = require("joi");
 Joi.objectId = require("joi-objectid")(Joi);
 const config = require("config");
+const logger = require("./services/winston");
 const app = express();
+
+process.on("uncaughtException", (ex) => {
+  winston.error(ex.message, { metadata: ex.stack });
+  process.exit(1);
+});
+
+process.on("unhandledRejection", (ex) => {
+  winston.error(ex.message, { metadata: ex.stack });
+  process.exit(1);
+});
+
+
 
 if (!config.get("jwtSecretKey")) {
   console.log("FATAL ERROR: jwtSecretKey is no defined");
@@ -17,12 +31,15 @@ if (!config.get("jwtSecretKey")) {
 }
 
 mongoose
-  .connect("mongodb+srv://dbUser:password1234@restful.tp8d8.mongodb.net/dbUser?retryWrites=true&w=majority", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-    useCreateIndex: true,
-  })
+  .connect(
+    "mongodb+srv://dbUser:password1234@restful.tp8d8.mongodb.net/dbUser?retryWrites=true&w=majority",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false,
+      useCreateIndex: true,
+    }
+  )
   .then(() => console.log("Connected to db..."))
   .catch((err) => console.error("Could not connect to db...", err));
 
