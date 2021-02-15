@@ -7,7 +7,7 @@ const { userRoles } = require("../models/user");
 
 router.get("/", async (req, res) => {
   try {
-    const categories = await Category.find();
+    const categories = await Category.find().populate("owner", "-password -__v -verificationToken");
     return res.json(categories);
   } catch (error) {
     return res.status(400).json({
@@ -41,6 +41,7 @@ router.post(
       const category = new Category({
         name: req.body.name,
         description: req.body.description,
+        owner: req.user.id,
       });
 
       try {

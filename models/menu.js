@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
+Joi.objectId = require('joi-objectid')(Joi);
 
 const Menu = mongoose.model(
   "Menu",
@@ -19,6 +20,10 @@ const Menu = mongoose.model(
     price: {
       type: Number,
       required: true,
+    },
+    owner: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
   })
 );

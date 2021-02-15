@@ -38,6 +38,7 @@ router.post("/", async (req, res) => {
       description: req.body.description,
       category: req.body.categoryId,
       price: req.body.price,
+      owner: req.user.id,
     });
 
     try {
