@@ -3,9 +3,9 @@ const express = require("express");
 const router = express.Router();
 const { User, validate } = require("../models/user");
 const { hash } = require("../services/password-hasher");
-const auth = require("../middlewares/auth");
+const authentication = require("../middlewares/authentication");
 
-router.get("/me", auth, async (req, res) => {
+router.get("/me", authentication, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select([
       "-password",

@@ -6,6 +6,7 @@ function generateToken(User) {
     id: User.id,
     name: User.name,
     email: User.email,
+    role: User.role,
   };
 
   const token = jwt.sign(userInfo, config.get("jwtSecretKey"));

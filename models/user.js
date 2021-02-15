@@ -3,6 +3,12 @@ const Joi = require("joi");
 const { v4 } = require("uuid");
 const passwordComplexity = require("joi-password-complexity");
 
+const roles = {
+  user: "USER",
+  admin: "ADMIN",
+  owner: "OWNER",
+};
+
 const User = mongoose.model(
   "User",
   new mongoose.Schema({
@@ -28,6 +34,10 @@ const User = mongoose.model(
       type: String,
       default: v4(),
     },
+    role: {
+      type: String,
+      default: roles.user,
+    },
   })
 );
 
@@ -42,4 +52,5 @@ function validateUser(User) {
 }
 
 exports.User = User;
+exports.userRoles = roles;
 exports.validate = validateUser;

@@ -1,6 +1,6 @@
 const { verifyToken } = require("../services/jwt");
 
-function auth(req, res, next) {
+function authentication(req, res, next) {
   const authHeader = req.headers["authorization"];
   const type = authHeader && authHeader.split(" ")[0];
   const token = authHeader && authHeader.split(" ")[1];
@@ -26,4 +26,4 @@ function auth(req, res, next) {
   }
 }
 
-module.exports = auth;
+module.exports = authentication;
