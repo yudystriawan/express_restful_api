@@ -1,3 +1,5 @@
+require('express-async-errors');
+const errorHandling = require('./middlewares/errorHandling');
 const express = require("express");
 const menus = require("./routes/menus");
 const categories = require("./routes/categories");
@@ -30,6 +32,8 @@ app.use("/api/menus", menus);
 app.use("/api/categories", categories);
 app.use("/api/users", users);
 app.use("/api/auth", auth);
+//required last
+app.use(errorHandling);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port: ${port}...`));

@@ -4,14 +4,8 @@ const { Menu, validate } = require("../models/menu");
 const { User } = require("../models/user");
 
 router.get("/", async (req, res) => {
-  try {
-    const menus = await Menu.find().populate("category");
-    return res.json(menus);
-  } catch (error) {
-    return res.status(400).json({
-      message: error.message,
-    });
-  }
+  const menus = await Menu.find().populate("category");
+  return res.json(menus);
 });
 
 router.get("/:id", async (req, res) => {
@@ -41,21 +35,15 @@ router.post("/", async (req, res) => {
       owner: req.user.id,
     });
 
-    try {
-      const user = await User.findById(req.user.id);
-      if (!user.isVerified()) {
-        return res.status(400).json({
-          message: "User must verified first",
-        });
-      }
-
-      const result = await menu.save();
-      res.json(result);
-    } catch (error) {
+    const user = await User.findById(req.user.id);
+    if (!user.isVerified()) {
       return res.status(400).json({
-        message: error.message,
+        message: "User must verified first",
       });
     }
+
+    const result = await menu.save();
+    res.json(result);
   }
 });
 
@@ -66,30 +54,18 @@ router.put("/:id", async (req, res) => {
   if (req.body.description) attributes.description = req.body.description;
   if (req.body.price) attributes.price = req.body.price;
 
-  try {
-    const menu = await Menu.findByIdAndUpdate(
-      req.params.id,
-      { $set: attributes },
-      { new: true }
-    );
+  const menu = await Menu.findByIdAndUpdate(
+    req.params.id,
+    { $set: attributes },
+    { new: true }
+  );
 
-    res.json(menu);
-  } catch (error) {
-    return res.status(400).json({
-      message: error.message,
-    });
-  }
+  res.json(menu);
 });
 
 router.delete("/:id", async (req, res) => {
-  try {
-    const menu = await Menu.remove({ _id: req.params.id });
-    res.json(menu);
-  } catch (error) {
-    res.status(400).json({
-      message: error,
-    });
-  }
+  const menu = await Menu.remove({ _id: req.params.id });
+  res.json(menu);
 });
 
 module.exports = router;

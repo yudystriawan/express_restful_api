@@ -6,18 +6,11 @@ const { hash } = require("../services/password-hasher");
 const authentication = require("../middlewares/authentication");
 
 router.get("/me", authentication, async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id).select([
-      "-password",
-      "-verificationToken",
-    ]);
-    res.json(user);
-  } catch (error) {
-    res.status(400).json({
-      code: 400,
-      message: error.message,
-    });
-  }
+  const user = await User.findById(req.user.id).select([
+    "-password",
+    "-verificationToken",
+  ]);
+  res.json(user);
 });
 
 router.post("/", async (req, res) => {
@@ -34,15 +27,9 @@ router.post("/", async (req, res) => {
 
     user = new User(_.pick(req.body, ["name", "email", "password"]));
 
-    try {
-      user.password = await hash(user.password);
-      await user.save();
-      res.json(_.pick(user, ["_id", "name", "email", "verified"]));
-    } catch (error) {
-      return res.status(400).json({
-        message: error.message,
-      });
-    }
+    user.password = await hash(user.password);
+    await user.save();
+    res.json(_.pick(user, ["_id", "name", "email", "verified"]));
   }
 });
 
