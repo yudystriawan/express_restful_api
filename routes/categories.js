@@ -25,8 +25,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
-  console.log(req.body);
+router.post("/", auth, async (req, res) => {
   const { error } = validate(req.body);
   if (error) {
     res.status(400).json({

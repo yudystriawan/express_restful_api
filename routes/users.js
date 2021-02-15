@@ -3,6 +3,22 @@ const express = require("express");
 const router = express.Router();
 const { User, validate } = require("../models/user");
 const { hash } = require("../services/password-hasher");
+const auth = require("../middlewares/auth");
+
+router.get("/me", auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select([
+      "-password",
+      "-verificationToken",
+    ]);
+    res.json(user);
+  } catch (error) {
+    res.status(400).json({
+      code: 400,
+      message: error.message,
+    });
+  }
+});
 
 router.post("/", async (req, res) => {
   const { error } = validate(req.body);
@@ -13,7 +29,7 @@ router.post("/", async (req, res) => {
     });
   } else {
     let user = await User.findOne({ email: req.body.email });
-    if (!user)
+    if (user)
       return res.status(400).json({ message: "User already registered" });
 
     user = new User(_.pick(req.body, ["name", "email", "password"]));

@@ -15,7 +15,7 @@ if (!config.get("jwtSecretKey")) {
 }
 
 mongoose
-  .connect("mongodb://127.0.0.1/market", {
+  .connect("mongodb+srv://dbUser:password1234@restful.tp8d8.mongodb.net/dbUser?retryWrites=true&w=majority", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,

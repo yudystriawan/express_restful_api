@@ -3,7 +3,7 @@ const config = require("config");
 
 function generateToken(User) {
   const userInfo = {
-    _id: User.id,
+    id: User.id,
     name: User.name,
     email: User.email,
   };
