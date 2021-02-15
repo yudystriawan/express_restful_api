@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const authentication = require("../middlewares/authentication");
 const { Category, validate } = require("../models/category");
+const { User } = require("../models/user");
 const authorization = require("../middlewares/authorization");
 const { userRoles } = require("../models/user");
 
@@ -45,8 +46,16 @@ router.post(
       });
 
       try {
+        const user = await User.findById(req.user.id);
+        if (!user.isVerified()) {
+          return res.status(400).json({
+            message: 'User must verified first',
+          });
+        }
+        
         const result = await category.save();
-        res.json(result);
+        return res.json(result);  
+        
       } catch (error) {
         return res.status(400).json({
           message: error.message,

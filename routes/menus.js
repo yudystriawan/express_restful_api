@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Menu, validate } = require("../models/menu");
-const { Category } = require("../models/category");
+const { User } = require("../models/user");
 
 router.get("/", async (req, res) => {
   try {
@@ -42,6 +42,13 @@ router.post("/", async (req, res) => {
     });
 
     try {
+      const user = await User.findById(req.user.id);
+      if (!user.isVerified()) {
+        return res.status(400).json({
+          message: "User must verified first",
+        });
+      }
+
       const result = await menu.save();
       res.json(result);
     } catch (error) {
