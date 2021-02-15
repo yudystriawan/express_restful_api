@@ -6,11 +6,11 @@ const Category = mongoose.model(
   new mongoose.Schema({
     name: {
       type: String,
-      require: true,
+      required: true,
     },
     description: {
       type: String,
-      require: true,
+      required: true,
     },
   })
 );
@@ -21,7 +21,7 @@ function validateCategory(cateogory) {
     description: Joi.string().required(),
   });
 
-  return schema.validate(schema);
+  return schema.validate(cateogory);
 }
 
 exports.Category = Category;

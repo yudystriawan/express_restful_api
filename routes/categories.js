@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const auth = require("../middlewares/auth");
 const { Category, validate } = require("../models/category");
 
 router.get("/", async (req, res) => {
@@ -25,6 +26,7 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
+  console.log(req.body);
   const { error } = validate(req.body);
   if (error) {
     res.status(400).json({
