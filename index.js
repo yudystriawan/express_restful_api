@@ -1,4 +1,3 @@
-const winston = require("./services/winston");
 require("express-async-errors");
 const errorHandling = require("./middlewares/errorHandling");
 const express = require("express");
@@ -10,20 +9,11 @@ const mongoose = require("mongoose");
 const Joi = require("joi");
 Joi.objectId = require("joi-objectid")(Joi);
 const config = require("config");
-const logger = require("./services/winston");
 const app = express();
 
-process.on("uncaughtException", (ex) => {
-  winston.error(ex.message, { metadata: ex.stack });
-  process.exit(1);
-});
-
 process.on("unhandledRejection", (ex) => {
-  winston.error(ex.message, { metadata: ex.stack });
-  process.exit(1);
+  throw ex;
 });
-
-
 
 if (!config.get("jwtSecretKey")) {
   console.log("FATAL ERROR: jwtSecretKey is no defined");
